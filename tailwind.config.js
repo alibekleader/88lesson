@@ -1,22 +1,18 @@
-module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
-    './src/layouts/**/*.{js,ts,jsx,tsx}',
-  ],
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      colors: {
-        primary: '#8e24aa',
-        facebook: '#3b5999',
-        twitter: '#55acee',
-        linkedin: '#0077b5',
-        instagram: '#e4405f',
-        whatsapp: '#25d366',
-        youtube: '#cd201f',
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
     },
   },
   plugins: [],
-  darkMode: 'class',
-}
+};
