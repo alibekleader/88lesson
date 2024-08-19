@@ -1,57 +1,47 @@
-import React from "react";
-import { Card, Form, Input, Button, Typography, Divider } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import "antd/dist/reset.css";
-import "./Login.css"; // CSS faylini import qilish
-
-const { Title } = Typography;
+import React, { useState } from 'react';
+import axios from '../api/axios';
+import { useAuthStore } from '../store/useStore';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Received values:', values);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/login', { username, password });
+      setAccessToken(response.data.access_token);
+      navigate('/home');
+    } catch (error) {
+      console.error('Login failed', error);
+    }
   };
 
   return (
-    <div className="login-container">
-      <Card className="login-card" title="Login" bordered={false}>
-        <Title level={3} className="login-title">Welcome Back</Title>
-        <Form
-          name="login"
-          className="login-form"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
-          >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Username"
-              className="login-input"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Password"
-              className="login-input"
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-button">
-              Log In
-            </Button>
-          </Form.Item>
-          <Divider />
-          <Form.Item>
-            <a href="/forgot-password">Forgot Password</a>
-          </Form.Item>
-        </Form>
-      </Card>
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
+        <h2 className="text-2xl mb-4">Login</h2>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="block w-full mb-2 p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="block w-full mb-2 p-2 border border-gray-300 rounded"
+        />
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+          Login
+        </button>
+      </form>
     </div>
   );
 };
