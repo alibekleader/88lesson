@@ -1,51 +1,94 @@
-// profile.tsx
 import React, { useState } from 'react';
-import { Container, Form, Button, Card } from 'react-bootstrap';
-import Layout from '../../components/layout';
+import { Card, Avatar, Button, Modal, Form, Input, Typography } from 'antd';
+import { UserOutlined, EditOutlined } from '@ant-design/icons';
+import './Profile.css'; // CSS faylni import qilish
+
+const { Title } = Typography;
 
 const Profile: React.FC = () => {
-  const [name, setName] = useState<string>('John Doe');
-  const [email, setEmail] = useState<string>('john.doe@example.com');
+  // Foydalanuvchi ma'lumotlari
+  const [user, setUser] = useState({
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    bio: 'Software Developer',
+  });
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Here you can add the logic to update the profile
-    alert('Profile updated successfully!');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showEditModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleOk = (values: any) => {
+    setUser({
+      ...user,
+      ...values,
+    });
+    setIsModalVisible(false);
   };
 
   return (
-    <Layout title="Profile">
-      <Container>
-        <Card>
-          <Card.Header>Profile Information</Card.Header>
-          <Card.Body>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Form.Group>
+    <div className="profile-container">
+      <Card
+        style={{ width: 300, margin: 'auto', textAlign: 'center' }}
+        cover={<img alt="example" src="https://via.placeholder.com/300x200" />}
+        actions={[
+          <Button type="primary" icon={<EditOutlined />} onClick={showEditModal}>
+            Edit Profile
+          </Button>,
+        ]}
+      >
+        <Avatar size={100} icon={<UserOutlined />} />
+        <Title level={3} style={{ marginTop: 16 }}>
+          {user.name}
+        </Title>
+        <p>{user.email}</p>
+        <p>{user.bio}</p>
+      </Card>
 
-              <Form.Group controlId="formEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Group>
-
-              <Button variant="primary" type="submit">
-                Save Changes
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      </Container>
-    </Layout>
+      <Modal
+        title="Edit Profile"
+        visible={isModalVisible}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <Form
+          initialValues={user}
+          onFinish={handleOk}
+        >
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please input your name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="bio"
+            label="Bio"
+            rules={[{ required: false }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Save Changes
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
   );
 };
 
