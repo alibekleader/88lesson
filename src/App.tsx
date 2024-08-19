@@ -1,35 +1,29 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/dashboard/Dashboard";
-import Login from "./pages/login/Login";
-import Users from "./pages/users/Users";
-import Products from "./pages/products/Products";
-import Profile from "./pages/profile/Profile";
-import Hello from "./components/Hello";
-import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute component
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Sidebar from './pages/components/Sidebar';
+import Home from './pages/Home';
+import Products from './pages/Products';
+import Users from './pages/Users';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Dashboard />}>
-            <Route index element={<DashboardHome />} />
-            <Route path="users" element={<Users />} />
-            <Route path="products" element={<Products />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <div className="flex">
+        <Sidebar />
+        <div className="content p-4">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 };
-
-const DashboardHome = () => (
-  <div>
-    <Hello />
-  </div>
-);
 
 export default App;
