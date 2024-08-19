@@ -149,5 +149,4 @@ const Hello: React.FC = () => {
     </div>
   );
 };
-
 export default Hello;
